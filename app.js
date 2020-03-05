@@ -168,6 +168,35 @@ class UI {
     });
 
     // cart functionality
+    cartContent.addEventListener("click", e => {
+      if (e.target.classList.contains("remove-item")) {
+        let removeItem = e.target;
+        let id = removeItem.dataset.id;
+        cartContent.removeChild(removeItem.parentElement.parentElement);
+        this.removeItem(id);
+      } else if (e.target.classList.contains("fa-chevron-up")) {
+        let addAmount = e.target;
+        let id = addAmount.dataset.id;
+        let tempItem = cart.find(item => item.id === id);
+        tempItem.amount += 1;
+        Storage.saveCart(cart);
+        this.setCartValues(cart);
+        addAmount.nextElementSibling.innerText = tempItem.amount;
+      } else if (e.target.classList.contains("fa-chevron-down")) {
+        let lowerAmount = e.target;
+        let id = lowerAmount.dataset.id;
+        let tempItem = cart.find(item => item.id === id);
+        tempItem.amount -= 1;
+        if (tempItem.amount > 0) {
+          this.removeItem(id);
+          Storage.saveCart(cart);
+          this.setCartValues(cart);
+          lowerAmount.previousElementSibling.innerText = tempItem.amount;
+        } else {
+          cartContent.removeChild(lowerAmount.parentElement.parentElement);
+        }
+      }
+    });
   }
 
   clearCart() {
