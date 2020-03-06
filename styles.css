@@ -265,3 +265,21 @@ body {
 }
 
 /* --------------- End of Cart ---------------- */
+
+/* footer-section  */
+footer {
+  background: #e7e2dd;
+  padding: 25px 0px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+footer a {
+  color: #f09d51;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer a:hover {
+  color: #de8a3d;
+}
