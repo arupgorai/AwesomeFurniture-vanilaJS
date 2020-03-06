@@ -1,3 +1,8 @@
+const client = contentful.createClient({
+  space: "2mk78hpgwfml",
+  accessToken: "_fBuFBj7yb5jikFdV1CUpEUfyOV2wwkxnpbWdwVYqIc"
+});
+
 // variables
 const cartBtn = document.querySelector(".cart-btn");
 const closeCartBtn = document.querySelector(".close-cart");
@@ -19,9 +24,12 @@ let buttonsDOM = [];
 class Products {
   async getProducts() {
     try {
-      let result = await fetch("products.json");
-      let data = await result.json();
-      return data.items.map(item => {
+      let contentful = await client.getEntries({
+        // content_type: "awesomeFurniture"
+      });
+      // let result = await fetch("products.json");
+      let data = await contentful.items;
+      return data.map(item => {
         const { title, price } = item.fields;
         const { id } = item.sys;
         const { url: image } = item.fields.image.fields.file;
@@ -178,7 +186,7 @@ class UI {
         let addAmount = e.target;
         let id = addAmount.dataset.id;
         let tempItem = cart.find(item => item.id === id);
-        tempItem.amount += 1;
+        tempItem.amount = tempItem.amount + 1;
         Storage.saveCart(cart);
         this.setCartValues(cart);
         addAmount.nextElementSibling.innerText = tempItem.amount;
@@ -186,14 +194,14 @@ class UI {
         let lowerAmount = e.target;
         let id = lowerAmount.dataset.id;
         let tempItem = cart.find(item => item.id === id);
-        tempItem.amount -= 1;
+        tempItem.amount = tempItem.amount - 1;
         if (tempItem.amount > 0) {
-          this.removeItem(id);
           Storage.saveCart(cart);
           this.setCartValues(cart);
           lowerAmount.previousElementSibling.innerText = tempItem.amount;
         } else {
           cartContent.removeChild(lowerAmount.parentElement.parentElement);
+          this.removeItem(id);
         }
       }
     });
